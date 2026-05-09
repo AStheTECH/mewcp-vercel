@@ -74,7 +74,6 @@ Maps to `GET /v10/projects`.
 
 **Inputs:**
 
-- `auth_token` (string, required) - Vercel bearer token
 - `team_id` (string, optional) - Team scope
 - `slug` (string, optional) - Team slug scope
 - `params` (object, optional) - Query params (`limit`, `search`, etc.)
@@ -90,7 +89,6 @@ Maps to `GET /v9/projects/{idOrName}`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `id_or_name` (string, required)
 - `team_id` (string, optional)
 - `slug` (string, optional)
@@ -106,7 +104,6 @@ Maps to `POST /v11/projects`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `body` (object, required) - Project creation payload
 - `team_id` (string, optional)
 - `slug` (string, optional)
@@ -122,7 +119,6 @@ Maps to `PATCH /v9/projects/{idOrName}`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `id_or_name` (string, required)
 - `body` (object, required)
 - `team_id` (string, optional)
@@ -139,7 +135,6 @@ Maps to `GET /v6/deployments`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `team_id` (string, optional)
 - `slug` (string, optional)
 - `params` (object, optional)
@@ -155,7 +150,6 @@ Maps to `GET /v13/deployments/{idOrUrl}`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `id_or_url` (string, required)
 - `team_id` (string, optional)
 - `slug` (string, optional)
@@ -171,7 +165,6 @@ Maps to `POST /v13/deployments`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `body` (object, required)
 - `team_id` (string, optional)
 - `slug` (string, optional)
@@ -187,7 +180,6 @@ Maps to `PATCH /v12/deployments/{id}/cancel`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `deployment_id` (string, required)
 - `team_id` (string, optional)
 - `slug` (string, optional)
@@ -203,7 +195,6 @@ Maps to `GET /v3/deployments/{idOrUrl}/events`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `id_or_url` (string, required)
 - `team_id` (string, optional)
 - `slug` (string, optional)
@@ -220,7 +211,6 @@ Maps to `GET /v10/projects/{idOrName}/env`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `id_or_name` (string, required)
 - `team_id` (string, optional)
 - `slug` (string, optional)
@@ -237,7 +227,6 @@ Maps to `POST /v10/projects/{idOrName}/env`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `id_or_name` (string, required)
 - `body` (object or array, required)
 - `team_id` (string, optional)
@@ -254,7 +243,6 @@ Maps to `PATCH /v9/projects/{idOrName}/env/{id}`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `id_or_name` (string, required)
 - `environment_variable_id` (string, required)
 - `body` (object, required)
@@ -272,7 +260,6 @@ Maps to `GET /v9/projects/{idOrName}/domains`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `id_or_name` (string, required)
 - `team_id` (string, optional)
 - `slug` (string, optional)
@@ -289,7 +276,6 @@ Maps to `POST /v10/projects/{idOrName}/domains`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `id_or_name` (string, required)
 - `body` (object, required)
 - `team_id` (string, optional)
@@ -306,7 +292,6 @@ Maps to `POST /v2/deployments/{id}/aliases`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `deployment_id` (string, required)
 - `body` (object, required)
 - `team_id` (string, optional)
@@ -323,7 +308,6 @@ Maps to `GET /v2/deployments/{id}/aliases`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `deployment_id` (string, required)
 - `team_id` (string, optional)
 - `slug` (string, optional)
@@ -339,7 +323,6 @@ Maps to `GET /v1/projects/{projectId}/deployments/{deploymentId}/runtime-logs`.
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `project_id` (string, required)
 - `deployment_id` (string, required)
 - `team_id` (string, optional)
@@ -357,7 +340,6 @@ Calls any Vercel REST endpoint when a dedicated wrapper tool is not yet availabl
 
 **Inputs:**
 
-- `auth_token` (string, required)
 - `method` (string, required)
 - `path` (string, required)
 - `team_id` (string, optional)
@@ -376,7 +358,6 @@ Calls any Vercel REST endpoint when a dedicated wrapper tool is not yet availabl
 {
   "tool": "vercel_api_request",
   "arguments": {
-    "auth_token": "<VERCEL_TOKEN>",
     "method": "GET",
     "path": "/v10/projects",
     "team_id": "team_xxx"
@@ -393,7 +374,6 @@ Calls any Vercel REST endpoint when a dedicated wrapper tool is not yet availabl
 <details>
 <summary><strong>Common Parameters</strong></summary>
 
-- `auth_token` - Vercel bearer token provided per tenant-facing call
 - `team_id` - Team context (`teamId` query value)
 - `slug` - Team slug context (`slug` query value)
 - `params` - Additional endpoint-specific query parameters
@@ -414,7 +394,7 @@ Calls any Vercel REST endpoint when a dedicated wrapper tool is not yet availabl
 <details>
 <summary><strong>Vercel API Key Guide</strong></summary>
 
-Tenant-facing tools require authentication via bearer token.
+Authentication is handled server-side via `fastmcp-credentials`. The gateway injects your Vercel token through the `X-MCP-Cred-Fields` header as a JSON object (e.g. `{"apiToken": "<token>"}`) — no `auth_token` parameter is needed in any tool call.
 
 ### Step 1: Create Token
 
@@ -422,16 +402,13 @@ Tenant-facing tools require authentication via bearer token.
 2. Create a personal access token
 3. Copy and securely store the token
 
-### Step 2: Use Token in Tool Calls
+### Step 2: Configure the Gateway
 
-Pass token as `auth_token` in each tenant-facing tool call.
+Provide the token to the MewCP gateway, which injects it via `X-MCP-Cred-Api-Key` on every request.
 
 ### Step 3: Team Scope
 
-If operating on team resources, include:
-
-- `team_id` and/or
-- `slug`
+If operating on team resources, include `team_id` and/or `slug` in your tool call.
 
 </details>
 
@@ -465,8 +442,8 @@ python server.py --transport streamable-http --host 127.0.0.1 --port 8001
 
 ### Missing or Invalid Token
 
-- Cause: Invalid or expired `auth_token`
-- Solution: Generate a new token and retry
+- Cause: Invalid or expired token, or missing `X-MCP-Cred-Api-Key` header from the gateway
+- Solution: Verify the gateway has a valid Vercel token configured and retry
 
 ### Team Resource Access Errors
 

@@ -2,6 +2,7 @@ import base64
 from typing import Any
 
 import httpx
+from fastmcp_credentials import get_credentials
 
 from .config import (
     ALLOWED_HTTP_METHODS,
@@ -85,15 +86,14 @@ def _normalize_and_validate_path(path: str) -> str:
 
 
 def _build_authorized_headers(
-    auth_token: str,
     headers: dict[str, Any] | None,
 ) -> dict[str, str]:
-    token = auth_token.strip()
-    if not token:
-        raise ValueError("auth_token is required and cannot be empty")
+    cred = get_credentials()
+    if not cred.fields.get("apiToken"):
+        raise ValueError("No API key available in credentials")
 
     request_headers = _serialize_headers(headers)
-    request_headers["Authorization"] = f"Bearer {token}"
+    request_headers["Authorization"] = f"Bearer {cred.fields['apiToken']}"
     request_headers.setdefault("Accept", "application/json")
     request_headers.setdefault("User-Agent", "cl-mcp-vercel/1.0")
     return request_headers
@@ -102,7 +102,6 @@ def _build_authorized_headers(
 def execute_vercel_request(
     method: str,
     path: str,
-    auth_token: str,
     headers: dict[str, Any] | None = None,
     params: dict[str, Any] | None = None,
     json_body: Any | None = None,
@@ -124,7 +123,7 @@ def execute_vercel_request(
         raise ValueError("max_response_chars must be greater than 0")
 
     url = f"{VERCEL_API_BASE_URL}{normalized_path}"
-    request_headers = _build_authorized_headers(auth_token=auth_token, headers=headers)
+    request_headers = _build_authorized_headers(headers=headers)
 
     try:
         with httpx.Client(
