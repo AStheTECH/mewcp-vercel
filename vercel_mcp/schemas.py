@@ -3,10 +3,6 @@ from typing import Any
 from typing_extensions import TypedDict
 
 
-class VercelAuthData(TypedDict, total=False):
-    token: str
-
-
 class VercelRequestData(TypedDict, total=False):
     method: str
     path: str

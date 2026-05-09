@@ -29,7 +29,6 @@ def _build_scoped_params(
 def _execute_tool_request(
     *,
     tool_name: str,
-    auth_token: str,
     method: str,
     path: str,
     team_id: str | None = None,
@@ -46,7 +45,6 @@ def _execute_tool_request(
         result = execute_vercel_request(
             method=method,
             path=path,
-            auth_token=auth_token,
             headers=headers,
             params=_build_scoped_params(params=params, team_id=team_id, slug=slug),
             json_body=json_body,
@@ -109,14 +107,12 @@ def register_tools(mcp: FastMCP) -> None:
         description="List projects for the authenticated account or team.",
     )
     def list_projects(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
         slug: str | None = Field(default=None, description="Optional slug for team-scoped requests"),
         params: dict[str, Any] | None = Field(default=None, description="Optional query params (limit, search, from, etc.)"),
     ) -> str:
         return _execute_tool_request(
             tool_name="list_projects",
-            auth_token=auth_token,
             method="GET",
             path="/v10/projects",
             team_id=team_id,
@@ -129,14 +125,12 @@ def register_tools(mcp: FastMCP) -> None:
         description="Get details for a specific project by ID or name.",
     )
     def get_project(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         id_or_name: str = Field(..., description="Project ID or project name"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
         slug: str | None = Field(default=None, description="Optional slug for team-scoped requests"),
     ) -> str:
         return _execute_tool_request(
             tool_name="get_project",
-            auth_token=auth_token,
             method="GET",
             path=f"/v9/projects/{id_or_name}",
             team_id=team_id,
@@ -148,14 +142,12 @@ def register_tools(mcp: FastMCP) -> None:
         description="Create a new Vercel project.",
     )
     def create_project(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         body: dict[str, Any] = Field(..., description="Project creation payload"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
         slug: str | None = Field(default=None, description="Optional slug for team-scoped requests"),
     ) -> str:
         return _execute_tool_request(
             tool_name="create_project",
-            auth_token=auth_token,
             method="POST",
             path="/v11/projects",
             team_id=team_id,
@@ -168,7 +160,6 @@ def register_tools(mcp: FastMCP) -> None:
         description="Update an existing Vercel project.",
     )
     def update_project(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         id_or_name: str = Field(..., description="Project ID or project name"),
         body: dict[str, Any] = Field(..., description="Project update payload"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
@@ -176,7 +167,6 @@ def register_tools(mcp: FastMCP) -> None:
     ) -> str:
         return _execute_tool_request(
             tool_name="update_project",
-            auth_token=auth_token,
             method="PATCH",
             path=f"/v9/projects/{id_or_name}",
             team_id=team_id,
@@ -189,14 +179,12 @@ def register_tools(mcp: FastMCP) -> None:
         description="List deployments for the authenticated account or team.",
     )
     def list_deployments(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
         slug: str | None = Field(default=None, description="Optional slug for team-scoped requests"),
         params: dict[str, Any] | None = Field(default=None, description="Optional query params (limit, projectId, state, etc.)"),
     ) -> str:
         return _execute_tool_request(
             tool_name="list_deployments",
-            auth_token=auth_token,
             method="GET",
             path="/v6/deployments",
             team_id=team_id,
@@ -209,14 +197,12 @@ def register_tools(mcp: FastMCP) -> None:
         description="Get deployment details by deployment ID or URL.",
     )
     def get_deployment(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         id_or_url: str = Field(..., description="Deployment ID or deployment URL"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
         slug: str | None = Field(default=None, description="Optional slug for team-scoped requests"),
     ) -> str:
         return _execute_tool_request(
             tool_name="get_deployment",
-            auth_token=auth_token,
             method="GET",
             path=f"/v13/deployments/{id_or_url}",
             team_id=team_id,
@@ -228,14 +214,12 @@ def register_tools(mcp: FastMCP) -> None:
         description="Create a new deployment.",
     )
     def create_deployment(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         body: dict[str, Any] = Field(..., description="Deployment creation payload"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
         slug: str | None = Field(default=None, description="Optional slug for team-scoped requests"),
     ) -> str:
         return _execute_tool_request(
             tool_name="create_deployment",
-            auth_token=auth_token,
             method="POST",
             path="/v13/deployments",
             team_id=team_id,
@@ -248,14 +232,12 @@ def register_tools(mcp: FastMCP) -> None:
         description="Cancel an in-progress deployment by ID.",
     )
     def cancel_deployment(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         deployment_id: str = Field(..., description="Deployment ID"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
         slug: str | None = Field(default=None, description="Optional slug for team-scoped requests"),
     ) -> str:
         return _execute_tool_request(
             tool_name="cancel_deployment",
-            auth_token=auth_token,
             method="PATCH",
             path=f"/v12/deployments/{deployment_id}/cancel",
             team_id=team_id,
@@ -267,7 +249,6 @@ def register_tools(mcp: FastMCP) -> None:
         description="Get deployment event stream metadata for a deployment.",
     )
     def get_deployment_events(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         id_or_url: str = Field(..., description="Deployment ID or deployment URL"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
         slug: str | None = Field(default=None, description="Optional slug for team-scoped requests"),
@@ -275,7 +256,6 @@ def register_tools(mcp: FastMCP) -> None:
     ) -> str:
         return _execute_tool_request(
             tool_name="get_deployment_events",
-            auth_token=auth_token,
             method="GET",
             path=f"/v3/deployments/{id_or_url}/events",
             team_id=team_id,
@@ -288,7 +268,6 @@ def register_tools(mcp: FastMCP) -> None:
         description="List environment variables for a project.",
     )
     def list_project_environment_variables(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         id_or_name: str = Field(..., description="Project ID or project name"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
         slug: str | None = Field(default=None, description="Optional slug for team-scoped requests"),
@@ -296,7 +275,6 @@ def register_tools(mcp: FastMCP) -> None:
     ) -> str:
         return _execute_tool_request(
             tool_name="list_project_environment_variables",
-            auth_token=auth_token,
             method="GET",
             path=f"/v10/projects/{id_or_name}/env",
             team_id=team_id,
@@ -309,7 +287,6 @@ def register_tools(mcp: FastMCP) -> None:
         description="Create one or more environment variables for a project.",
     )
     def create_project_environment_variables(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         id_or_name: str = Field(..., description="Project ID or project name"),
         body: dict[str, Any] | list[dict[str, Any]] = Field(
             ...,
@@ -320,7 +297,6 @@ def register_tools(mcp: FastMCP) -> None:
     ) -> str:
         return _execute_tool_request(
             tool_name="create_project_environment_variables",
-            auth_token=auth_token,
             method="POST",
             path=f"/v10/projects/{id_or_name}/env",
             team_id=team_id,
@@ -333,7 +309,6 @@ def register_tools(mcp: FastMCP) -> None:
         description="Update an existing environment variable in a project.",
     )
     def update_project_environment_variable(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         id_or_name: str = Field(..., description="Project ID or project name"),
         environment_variable_id: str = Field(..., description="Environment variable ID"),
         body: dict[str, Any] = Field(..., description="Environment variable update payload"),
@@ -342,7 +317,6 @@ def register_tools(mcp: FastMCP) -> None:
     ) -> str:
         return _execute_tool_request(
             tool_name="update_project_environment_variable",
-            auth_token=auth_token,
             method="PATCH",
             path=f"/v9/projects/{id_or_name}/env/{environment_variable_id}",
             team_id=team_id,
@@ -355,7 +329,6 @@ def register_tools(mcp: FastMCP) -> None:
         description="List domains assigned to a project.",
     )
     def list_project_domains(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         id_or_name: str = Field(..., description="Project ID or project name"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
         slug: str | None = Field(default=None, description="Optional slug for team-scoped requests"),
@@ -363,7 +336,6 @@ def register_tools(mcp: FastMCP) -> None:
     ) -> str:
         return _execute_tool_request(
             tool_name="list_project_domains",
-            auth_token=auth_token,
             method="GET",
             path=f"/v9/projects/{id_or_name}/domains",
             team_id=team_id,
@@ -376,7 +348,6 @@ def register_tools(mcp: FastMCP) -> None:
         description="Add a domain to a project.",
     )
     def add_project_domain(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         id_or_name: str = Field(..., description="Project ID or project name"),
         body: dict[str, Any] = Field(..., description="Domain payload (typically includes name)"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
@@ -384,7 +355,6 @@ def register_tools(mcp: FastMCP) -> None:
     ) -> str:
         return _execute_tool_request(
             tool_name="add_project_domain",
-            auth_token=auth_token,
             method="POST",
             path=f"/v10/projects/{id_or_name}/domains",
             team_id=team_id,
@@ -397,7 +367,6 @@ def register_tools(mcp: FastMCP) -> None:
         description="Assign an alias to a deployment.",
     )
     def assign_deployment_alias(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         deployment_id: str = Field(..., description="Deployment ID"),
         body: dict[str, Any] = Field(..., description="Alias payload"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
@@ -405,7 +374,6 @@ def register_tools(mcp: FastMCP) -> None:
     ) -> str:
         return _execute_tool_request(
             tool_name="assign_deployment_alias",
-            auth_token=auth_token,
             method="POST",
             path=f"/v2/deployments/{deployment_id}/aliases",
             team_id=team_id,
@@ -418,14 +386,12 @@ def register_tools(mcp: FastMCP) -> None:
         description="List aliases attached to a deployment.",
     )
     def list_deployment_aliases(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         deployment_id: str = Field(..., description="Deployment ID"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
         slug: str | None = Field(default=None, description="Optional slug for team-scoped requests"),
     ) -> str:
         return _execute_tool_request(
             tool_name="list_deployment_aliases",
-            auth_token=auth_token,
             method="GET",
             path=f"/v2/deployments/{deployment_id}/aliases",
             team_id=team_id,
@@ -437,7 +403,6 @@ def register_tools(mcp: FastMCP) -> None:
         description="Fetch runtime logs for a specific deployment.",
     )
     def get_runtime_logs_for_deployment(
-        auth_token: str = Field(..., description="Vercel personal access token or OAuth access token"),
         project_id: str = Field(..., description="Project ID"),
         deployment_id: str = Field(..., description="Deployment ID"),
         team_id: str | None = Field(default=None, description="Optional teamId for team-scoped requests"),
@@ -446,7 +411,6 @@ def register_tools(mcp: FastMCP) -> None:
     ) -> str:
         return _execute_tool_request(
             tool_name="get_runtime_logs_for_deployment",
-            auth_token=auth_token,
             method="GET",
             path=f"/v1/projects/{project_id}/deployments/{deployment_id}/runtime-logs",
             team_id=team_id,
@@ -459,10 +423,6 @@ def register_tools(mcp: FastMCP) -> None:
         description="Call any Vercel REST API endpoint with per-request tenant auth.",
     )
     def vercel_api_request(
-        auth_token: str = Field(
-            ...,
-            description="Vercel personal access token or OAuth access token",
-        ),
         method: str = Field(
             ...,
             description="HTTP method (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS)",
@@ -510,7 +470,6 @@ def register_tools(mcp: FastMCP) -> None:
     ) -> str:
         return _execute_tool_request(
             tool_name="vercel_api_request",
-            auth_token=auth_token,
             method=method,
             path=path,
             team_id=team_id,

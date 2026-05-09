@@ -1,3 +1,11 @@
+# Local AI/editor config stores
+.claude/
+.cursor/
+.windsurf/
+.roo/
+.vscode/
+
+# Python local env/cache
 __pycache__/
 *.py[cod]
 *.pyo
@@ -8,3 +16,7 @@ venv/
 .env.*
 .pytest_cache/
 .mypy_cache/
+
+# OS noise
+.DS_Store
+Thumbs.db

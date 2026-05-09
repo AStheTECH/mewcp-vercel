@@ -4,6 +4,7 @@
 import logging
 
 from fastmcp import FastMCP
+from fastmcp_credentials import CredentialMiddleware, HeaderCredentialBackend
 
 from vercel_mcp.cli import parse_args
 from vercel_mcp.config import configure_logging
@@ -12,7 +13,11 @@ from vercel_mcp.tools import register_tools
 configure_logging()
 logger = logging.getLogger("vercel-mcp-server")
 
-mcp = FastMCP("CL Vercel MCP Server")
+backend = HeaderCredentialBackend()
+mcp = FastMCP(
+    "CL Vercel MCP Server",
+    middleware=[CredentialMiddleware(backend, "static")],
+)
 register_tools(mcp)
 
 # Expose ASGI app for hosting platform's (e.g. Vercel) Python runtime.
