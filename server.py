@@ -15,7 +15,7 @@ logger = logging.getLogger("vercel-mcp-server")
 
 backend = HeaderCredentialBackend()
 mcp = FastMCP("MewCP Vercel MCP Server",
-    # stateless_http=True,
+
     middleware=[CredentialMiddleware(backend, "static")],
 )
 register_tools(mcp)
